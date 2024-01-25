@@ -10,7 +10,7 @@ var auth = require('../services/authentication');
 
 router.post('/generateReport', auth.authenticateToken,(req,res) => {
     const generatedUuid = uuid.v1();
-    const orderDetails = req.body;
+    console.log(req.body)
     var productDetailsReport = JSON.parse(orderDetails.productDetails);
 
     var query = "insert into bill (name,uuid,email,contactNumber,paymentMethod,total,productDetails,createdBy) values(?,?,?,?,?,?,?,?)";
@@ -38,4 +38,6 @@ router.post('/generateReport', auth.authenticateToken,(req,res) => {
         }
     })
 })
+
+
 module.exports = router;
