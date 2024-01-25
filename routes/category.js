@@ -4,7 +4,7 @@ const router = express.Router();
 var auth = require('../services/authentication');
 var checkRole = require('../services/checkRole');
 
-router.post('/add',auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
+router.post('/add', auth.authenticateToken, checkRole.checkRole,(req,res,next)=>{
     let category = req.body;
     query = "insert into category (name) values(?)";
     connection.query(query,[category.name],(err,results)=>{
@@ -29,9 +29,9 @@ router.get('/get',auth.authenticateToken,(req,res,next)=>{
     })
 })
 
-router.patch('update',auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
+router.patch('/update', auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
     let product = req.body;
-    var query = "update category ser name=? where id=?";
+    var query = "update category set name=? where id=?";
     connection.query(query,[product.name,product.id],(err,results)=>{
         if (!err){
             if (results.affectedRows == 0){
@@ -46,4 +46,4 @@ router.patch('update',auth.authenticateToken,checkRole.checkRole,(req,res,next)=
     })
 })
 
-module.exports
+module.exports = router;

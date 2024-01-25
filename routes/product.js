@@ -2,15 +2,14 @@ const express = require('express');
 const connection = require('../connection');
 const router = express.Router();
 var auth = require('../services/authentication');
-const checkRole = require('../services/checkRole');
 var checkRole = require('../services/checkRole');
 
-router.post('add',auth.authenticateToken,checkRole.checkRole,(req,res)=>{
+router.post('/add', auth.authenticateToken, checkRole.checkRole,(req,res)=>{
     let product = req.body;
     var query = "insert into product (name,categoryId,description,price,status) values(?,?,?,?,'true')";
     connection.query(query,[product.name,product.categoryId,product.description,product.price],(err,results)=>{
         if (!err){
-            return res.status(200).json({message:"Product is add success."});
+            return res.status(200).json({message:"Product added successfully."});
         }
         else {
             return res.status(500).json(err);
@@ -31,9 +30,9 @@ router.get('/get',auth.authenticateToken,(req,res,next)=>{
     })
 })
 
-router.get('getByCategory/ :id',auth.authenticateToken,(req,res,next)=>{
+router.get('/getByCategory/:id',auth.authenticateToken,(req,res,next)=>{
     const id = req.params.id;
-    var query = "select id,name from product where catogeryId= ? and status= 'true'";
+    var query = "select id,name from product where categoryId= ? and status= 'true'";
     connection.query(query,[id],(err,results)=>{
         if(!err){
             return res.status(200).json(results);
@@ -64,9 +63,9 @@ router.patch('/update',auth.authenticateToken,checkRole.checkRole,(req,res,next)
     connection.query(query,[product.name,product.categoryId,product.description,product.price,product.id],(err,results)=>{
         if (!err){
             if (results.affectedRows == 0){
-                return res.status(404).json({message:"Prodcut id does not found"});
+                return res.status(404).json({message:"Product id does not found"});
             }
-            return res.status(200).json({message:"Prodcut updated successfully"});
+            return res.status(200).json({message:"Product updated successfully"});
         }
         else {
             return res.status(500).json(err);
@@ -74,15 +73,15 @@ router.patch('/update',auth.authenticateToken,checkRole.checkRole,(req,res,next)
     })
 })
 
-router.delete('/delete',auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
+router.delete('/delete/:id', auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
     const id = req.params.id;
     var query = "delete from product where id=?";
     connection.query(query,[id],(err,results)=>{
         if (!err){
             if (results.affectedRows == 0){
-                return res.status(404).json({message:"Prodcut id does not found"});
+                return res.status(404).json({message:"Product id does not found"});
             }
-            return res.status(200).json({message:"Prodcut delete successfully"});
+            return res.status(200).json({message:"Product deleted successfully"});
         }
         else {
             return res.status(500).json(err);
@@ -91,7 +90,7 @@ router.delete('/delete',auth.authenticateToken,checkRole.checkRole,(req,res,next
 })
 
 router.patch('/updateStatus',auth.authenticateToken,checkRole.checkRole,(req,res,next)=>{
-    let product = req.body;
+    let user = req.body;
     var query = "update product set status=? where id=?";
     connection.query(query,[user.status,user.id],(err,results)=>{
         if (!err){
@@ -105,5 +104,6 @@ router.patch('/updateStatus',auth.authenticateToken,checkRole.checkRole,(req,res
         }
     })
 })
+
 
 module.exports = router;
